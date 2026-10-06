@@ -2,6 +2,56 @@
 
 Demo local con un agente de investigación CrewAI, búsqueda web en SearXNG por MCP y chat React transmitido mediante AG-UI/CopilotKit. La fábrica de `ResearchCrew` se comparte entre el CLI y el servicio web.
 
+![alt text](image.png)
+
+![alt text](image-1.png)
+
+
+
+## Arquitectura
+
+```mermaid
+flowchart TB
+    subgraph Browser["Navegador · localhost:3000"]
+        UI["ResearchWidget<br/>CopilotKitProvider + CopilotChat"]
+        LS[("localStorage<br/>historial y preferencias")]
+    end
+
+    subgraph NextJS["Next.js dev server · :3000"]
+        Proxy["Proxy runtime /api/copilotkit<br/>CrewAIAgent (HttpAgent)"]
+    end
+
+    subgraph FastAPI["FastAPI + AG-UI · 127.0.0.1:8000"]
+        Endpoint["POST /research/<br/>crewai_prepare_inputs"]
+        Flow["ResearchFlow (CrewAI Flow)<br/>ResearchState.use_web_search"]
+        Crew["ResearchCrew (fábrica)<br/>Agente Analista"]
+    end
+
+    subgraph Docker["Docker Compose"]
+        SearXNG["SearXNG · :8080<br/>JSON habilitado"]
+        Valkey[("Valkey (caché)")]
+    end
+
+    MCP["searxng-mcp<br/>uvx · MCPServerStdio"]
+    LLM["OpenRouter<br/>deepseek/deepseek-v4.1-flash"]
+    CLI["CLI main.py"]
+
+    UI -- "useWebSearch<br/>properties → forwardedProps" --> Proxy
+    Proxy -- "runAgent (POST)" --> Endpoint
+    Endpoint -- "inputs (snake_case)" --> Flow
+    Flow --> Crew
+    Crew -- "use_web_search = ON" --> MCP
+    MCP --> SearXNG
+    SearXNG --- Valkey
+    Crew -- "chat / tool_call" --> LLM
+    CLI --> Crew
+    Endpoint -- "eventos AG-UI (SSE)<br/>mensajes · estado · pasos" --> Proxy
+    Proxy -- "stream" --> UI
+    LS -.-> UI
+```
+
+Flujo: el toggle de búsqueda web viaja como `properties` del provider, se fusiona en `forwardedProps` de cada `runAgent`, y `crewai_prepare_inputs` lo normaliza a snake_case dentro de `ResearchState` (declarado `exclude=True` para que el eco de estado del cliente no lo pise). Con búsqueda activada el crew consulta SearXNG vía MCP; desactivada, el agente responde solo con el LLM. Los informes y preferencias se persisten en `localStorage`.
+
 ## Requisitos
 
 - Python 3.10–3.13 y [uv](https://docs.astral.sh/uv/).
