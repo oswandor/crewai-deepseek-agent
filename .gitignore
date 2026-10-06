@@ -1,0 +1,70 @@
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# uv / herramientas de desarrollo
+.python-version
+.tox/
+.nox/
+
+# Node.js / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Pruebas y reportes generados
+playwright-report/
+test-results/
+blob-report/
+allure-results/
+allure-report/
+gui-test-screenshots/
+*.snap
+
+# Herramientas locales del entorno
+.crewai/
+.playwright-mcp/
+.zcode/
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Archivos temporales
+*.tmp
+*.temp
+*.log
+test-codex-write.txt
+.env.example

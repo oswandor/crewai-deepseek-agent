@@ -1,0 +1,28 @@
+use_default_settings:
+  engines:
+    keep_only:
+      - duckduckgo
+      - brave
+      - wikipedia
+      - github
+      - pypi
+      - startpage
+
+server:
+  limiter: false
+  image_proxy: true
+  secret_key: "5dd1965e4549a442c5b261010b4e520589c4563af452c67ed6bdad191d33718b"
+
+search:
+  formats:
+    - html
+    - json
+  ban_time_on_fail: 10
+  max_ban_time_on_fail: 300
+
+outgoing:
+  request_timeout: 6.0
+  max_request_timeout: 15.0
+  pool_connections: 50
+  pool_maxsize: 20
+  enable_http2: true

@@ -1,0 +1,26 @@
+[project]
+name = "crewai-openrouter-prueba"
+version = "0.1.0"
+description = "Proyecto mínimo para probar CrewAI con OpenRouter"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "ag-ui-crewai>=0.3.1",
+    "crewai[litellm]",
+    "fastapi>=0.115.14",
+    "mcp>=1.28.1",
+    "python-dotenv>=1.0.1",
+    "uvicorn[standard]>=0.34.3",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+]
